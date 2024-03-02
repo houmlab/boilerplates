@@ -61,6 +61,9 @@ services:
           - job_name: 'prometheus'
             static_configs:
               - targets: ['localhost:9090']
+          - job_name: 'linux_machines'
+            static_configs:
+              - targets: ['192.168.110.61:9100']  # 'antes, apt install prometheus-node-exporter' en la maquina si es debian-based
         EOF
         /bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.enable-lifecycle
 
