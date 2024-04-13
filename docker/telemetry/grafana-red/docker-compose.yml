@@ -1,0 +1,57 @@
+version: "3"
+
+networks:
+  telemetry:
+
+services:
+  grafana:
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_SERVER_ROOT_URL=http://localhost:3000/
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,marcusolsson-json-datasource,marcusolsson-dynamictext-panel
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: RED Bus Stop Predictor
+          type: marcusolsson-json-datasource
+          access: proxy
+          orgId: 1
+          url: https://www.red.cl/predictor/prediccion
+          uid: red-bus-stop-prediction-json-api
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false
+        - name: RED Rest API
+          type: marcusolsson-json-datasource
+          access: proxy
+          orgId: 1
+          url: https://www.red.cl/restservice_v2/rest
+          uid: red-rest-json-api
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false          
+        EOF
+        /run.sh
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+     - telemetry
+    volumes:
+     - 'grafana_storage:/var/lib/grafana'
+      
+
+volumes:
+  grafana_storage:   
+ 

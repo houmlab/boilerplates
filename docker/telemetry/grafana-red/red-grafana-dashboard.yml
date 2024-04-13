@@ -1,0 +1,624 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "red-rest-json-api"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 2,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "![RED](https://www.red.cl/wp-content/themes/red/images/logotipo-footer.png)",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.2.3",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "red-bus-stop-prediction-json-api"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 22,
+        "x": 2,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "afterRender": "",
+        "content": "<h1>Arrivals to Stop</h1>\n{{#if (and (json @root.data.[0].[0].distanciabus1) (eq (json @root.data.[0].[0].distanciabus1)\n'null'))}}\n<span style=\"background-color: #F7941D; color: white;\">No data available yet</span>\n{{else}}\n<span style='background-color: {{unquote (json @root.data.[0].[0].color)}};padding: 5px; border-radius: 5px; '>  Distance Bus 1 in Meters:  {{unquote (json @root.data.[0].[0].distanciabus1)}} Arrival Time: {{unquote (json @root.data.[0].[0].horaprediccionbus1)}} Destination:\n{{unquote (json @root.data.[0].[0].destino)}} </span>  \n{{/if}}\n\n{{#if (and (json @root.data.[0].[0].distanciabus2) (eq (json @root.data.[0].[0].distanciabus2)\n'null'))}}\n<span style=\"background-color: #F7941D; color: white;\">No data available yet</span>\n{{else}}\n<span style='background-color: {{unquote (json @root.data.[0].[0].color)}};padding: 5px; border-radius: 5px; '> Distance Bus 2 in Meters:  {{unquote (json @root.data.[0].[0].distanciabus2)}} Arrival Time: {{unquote (json @root.data.[0].[0].horaprediccionbus2)}} </span>\n{{/if}}\n\n<h2>Additional Information</h2>\n{{#if (and (json @root.data.[0].[0].respuestaServicio) (eq (json @root.data.[0].[0].respuestaServicio)\n''))}}\n<span style=\"background-color: #F7941D; color: white;\">No data available yet</span>\n{{else}}\n{{unquote (json @root.data.[0].[0].respuestaServicio)}}\n{{/if}}\n",
+        "defaultContent": "The query didn't return any results.",
+        "editor": {
+          "format": "auto",
+          "language": "handlebars"
+        },
+        "editors": [
+          "helpers"
+        ],
+        "externalScripts": [],
+        "externalStyles": [],
+        "helpers": "handlebars.registerHelper(\"unquote\", (context) =>\n  context.replaceAll(\"\\\"\", '')\n);\n\n",
+        "renderMode": "data",
+        "styles": "",
+        "wrap": true
+      },
+      "pluginVersion": "4.5.0",
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "red-bus-stop-prediction-json-api"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.servicios.item[*]",
+              "language": "jsonpath",
+              "name": ""
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "t",
+              "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTI0NDEyODg4MTB9.kkqakEJ7CIjjXPrAHLByKdiNqeDOjAyTN2YZoXEwQko"
+            ],
+            [
+              "codsimt",
+              "${stopsByService}"
+            ],
+            [
+              "codser",
+              "${service}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "title": "Stop Information for ${stopsByService} on service ${service}",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "keepTime": false,
+            "replace": true,
+            "source": "*"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "distanciabus1",
+                "distanciabus2",
+                "horaprediccionbus1",
+                "horaprediccionbus2",
+                "ppubus1",
+                "ppubus2",
+                "respuestaServicio",
+                "color",
+                "destino"
+              ]
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "marcusolsson-dynamictext-panel"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 23,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 1,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "opacity": 1,
+          "tooltip": false,
+          "type": "osm-standard"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": true,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "arrow": 0,
+              "style": {
+                "color": {
+                  "fixed": "dark-red"
+                },
+                "lineWidth": 2,
+                "opacity": 1,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 5,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "filterData": {
+              "id": "byRefId",
+              "options": "A"
+            },
+            "location": {
+              "latitude": "0",
+              "longitude": "1",
+              "mode": "coords"
+            },
+            "name": "Routes",
+            "tooltip": true,
+            "type": "route"
+          },
+          {
+            "config": {
+              "showLegend": false,
+              "style": {
+                "color": {
+                  "fixed": "#ffffff"
+                },
+                "opacity": 1,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 2,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "filterData": {
+              "id": "byRefId",
+              "options": "A"
+            },
+            "location": {
+              "latitude": "0",
+              "longitude": "1",
+              "mode": "coords"
+            },
+            "name": "Stops",
+            "tooltip": true,
+            "type": "markers"
+          },
+          {
+            "config": {
+              "showLegend": false,
+              "style": {
+                "color": {
+                  "fixed": "semi-dark-blue"
+                },
+                "opacity": 1,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 6,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "filterData": {
+              "id": "byRefId",
+              "options": "B"
+            },
+            "location": {
+              "latitude": "x",
+              "longitude": "y",
+              "mode": "coords"
+            },
+            "name": "SelectedStop",
+            "tooltip": false,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "fit",
+          "lat": -33.45694,
+          "lon": -70.64827,
+          "shared": false,
+          "zoom": 15
+        }
+      },
+      "pluginVersion": "10.2.3",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "red-rest-json-api"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.${direction}.paraderos[*]"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "codsint",
+              "${service}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/conocerecorrido"
+        },
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "red-bus-stop-prediction-json-api"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.x"
+            },
+            {
+              "jsonPath": "$.y",
+              "language": "jsonpath",
+              "name": ""
+            }
+          ],
+          "hide": false,
+          "method": "GET",
+          "params": [
+            [
+              "t",
+              "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MTI0NDEyODg4MTB9.kkqakEJ7CIjjXPrAHLByKdiNqeDOjAyTN2YZoXEwQko"
+            ],
+            [
+              "codsimt",
+              "${stopsByService}"
+            ],
+            [
+              "codser",
+              "${service}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "B",
+          "urlPath": ""
+        }
+      ],
+      "title": "Map",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "json",
+            "jsonPaths": [],
+            "replace": true,
+            "source": "*"
+          }
+        },
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "json",
+            "jsonPaths": [],
+            "keepTime": false,
+            "replace": false,
+            "source": "pos"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "A id",
+                "A cod",
+                "A num",
+                "A pos",
+                "A name",
+                "A comuna",
+                "A type",
+                "A servicios",
+                "A stop",
+                "A eje",
+                "A codSimt",
+                "A distancia",
+                "A 0",
+                "A 1",
+                "B y",
+                "B x"
+              ]
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "B x"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "B y"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "geomap"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "507",
+          "value": "507"
+        },
+        "datasource": {
+          "type": "marcusolsson-json-datasource",
+          "uid": "red-rest-json-api"
+        },
+        "definition": "$.*",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Services",
+        "multi": false,
+        "name": "service",
+        "options": [],
+        "query": {
+          "cacheDurationSeconds": 300,
+          "fields": [
+            {
+              "jsonPath": "$.*"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "urlPath": "/getservicios/all"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "ida",
+          "value": "ida"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Direction",
+        "multi": false,
+        "name": "direction",
+        "options": [
+          {
+            "selected": true,
+            "text": "ida",
+            "value": "ida"
+          },
+          {
+            "selected": false,
+            "text": "regreso",
+            "value": "regreso"
+          }
+        ],
+        "query": "ida,regreso",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "PJ1797",
+          "value": "PJ1797"
+        },
+        "datasource": {
+          "type": "marcusolsson-json-datasource",
+          "uid": "red-rest-json-api"
+        },
+        "definition": "$.${direction}.paraderos[*].cod",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Stops",
+        "multi": false,
+        "name": "stopsByService",
+        "options": [],
+        "query": {
+          "cacheDurationSeconds": 300,
+          "fields": [
+            {
+              "jsonPath": "$.${direction}.paraderos[*].cod"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "codsint",
+              "${service}"
+            ]
+          ],
+          "queryParams": "",
+          "urlPath": "/conocerecorrido"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "RED",
+  "uid": "ddhybbkz6ox6od",
+  "version": 8,
+  "weekStart": ""
+}
